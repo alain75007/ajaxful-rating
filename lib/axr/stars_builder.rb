@@ -82,7 +82,8 @@ module AjaxfulRating # :nodoc:
         if !options[:force_static] && !already_rated && user && options[:current_user] == user
           link_star_tag(value, css_class)
         else
-          @template.content_tag(:span, show_value, :class => css_class, :title => i18n(:current))
+          link_star_tag(value, css_class)
+          #@template.content_tag(:span, show_value, :class => css_class, :title => i18n(:current))
         end
       end
     end
