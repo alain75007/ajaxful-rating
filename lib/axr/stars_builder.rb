@@ -109,8 +109,8 @@ module AjaxfulRating # :nodoc:
     end
 
     def wrapper_tag
-      @template.content_tag(:div, ratings_tag, :class => "ajaxful-rating-wrapper",
-        :id => rateable.wrapper_dom_id(options))
+      @template.content_tag(:div, ratings_tag, 
+        :class => "ajaxful-rating-wrapper #{rateable.wrapper_dom_id(options)}")
     end
   end
 end
