@@ -18,8 +18,13 @@ module AjaxfulRating # :nodoc:
     #     ajaxful_rateable :stars => 10, :cache_column => :custom_column
     #   end
     def ajaxful_rateable(options = {})
-      has_many :rates_without_dimension, :as => :rateable, :class_name => 'Rate',
-        :dependent => :destroy, :conditions => {:dimension => nil}
+      if Rails::VERSION::MAJOR > 3
+        has_many :rates_without_dimension, -> { where(:dimension => nil) }, :as => :rateable, :class_name => 'Rate',
+          :dependent => :destroy
+      else
+        has_many :rates_without_dimension, :as => :rateable, :class_name => 'Rate',
+          :dependent => :destroy, :conditions => {:dimension => nil}
+      end
       has_many :raters_without_dimension, :through => :rates_without_dimension, :source => :rater
 
       class << self
@@ -39,8 +44,13 @@ module AjaxfulRating # :nodoc:
 
       if options[:dimensions].is_a?(Array)
         options[:dimensions].each do |dimension|
-          has_many "#{dimension}_rates", :dependent => :destroy,
-            :conditions => {:dimension => dimension.to_s}, :class_name => 'Rate', :as => :rateable
+          if Rails::VERSION::MAJOR > 3
+            has_many "#{dimension}_rates", -> { where(:dimension => dimension.to_s) }, :dependent => :destroy,
+              class_name => 'Rate', :as => :rateable
+          else
+              has_many "#{dimension}_rates", :dependent => :destroy,
+                :conditions => {:dimension => dimension.to_s}, :class_name => 'Rate', :as => :rateable
+          end
           has_many "#{dimension}_raters", :through => "#{dimension}_rates", :source => :rater
 
           axr_config(dimension).update(options)
