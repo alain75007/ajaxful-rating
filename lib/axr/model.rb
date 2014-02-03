@@ -46,7 +46,7 @@ module AjaxfulRating # :nodoc:
         options[:dimensions].each do |dimension|
           if Rails::VERSION::MAJOR > 3
             has_many "#{dimension}_rates", -> { where(:dimension => dimension.to_s) }, :dependent => :destroy,
-              class_name => 'Rate', :as => :rateable
+              :class_name => 'Rate', :as => :rateable
           else
               has_many "#{dimension}_rates", :dependent => :destroy,
                 :conditions => {:dimension => dimension.to_s}, :class_name => 'Rate', :as => :rateable
